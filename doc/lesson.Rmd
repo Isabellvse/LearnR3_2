@@ -8,6 +8,7 @@ output: html_document
 library(vroom)
 library(here)
 library(vroom)
+source(here("R/functions.R")) 
 ```
 
 ## Importing raw data
@@ -130,27 +131,39 @@ add_numbers <- function(num1, num2) {
 }
 ```
 ```{r}
-#' Import MMASH user info data file.
+import_user_info(here("data-raw/mmash/user_1/user_info.csv"))
+```
+
+
+## Exercise for importing the saliva data as a function.
+
+```{r}
+
+#' Import MMASH user saliva data file.
 #'
-#' @param file_path Path to user info data file.
+#' @param file_path Path to user saliva data file
 #'
 #' @return Outputs a data frame/tibble.
-#'
-import_user_info <- function(file_path) {
-    info_data <- vroom(
+#' 
+import_saliva <- function(file_path) {
+    # Paste the code to import saliva data you created
+    # from previous exercise
+    saliva_data <- vroom(
         file_path,
         col_select = -1,
         col_types = cols(
-            gender = col_character(),
-            weight = col_double(),
-            height = col_double(),
-            age = col_double(),
+            col_skip(),
+            samples = col_character(),
+            cortisol_norm = col_double(),
+            melatonin_norm = col_double(),
             .delim = ","
         ),
         .name_repair = snakecase::to_snake_case
     )
-    return(info_data)
+    return(saliva_data)
 }
 
+# Test that the function works
+import_saliva(here("data-raw/mmash/user_1/saliva.csv"))
 ```
 
