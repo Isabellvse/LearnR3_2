@@ -129,4 +129,28 @@ add_numbers <- function(num1, num2) {
     return(added)
 }
 ```
+```{r}
+#' Import MMASH user info data file.
+#'
+#' @param file_path Path to user info data file.
+#'
+#' @return Outputs a data frame/tibble.
+#'
+import_user_info <- function(file_path) {
+    info_data <- vroom(
+        file_path,
+        col_select = -1,
+        col_types = cols(
+            gender = col_character(),
+            weight = col_double(),
+            height = col_double(),
+            age = col_double(),
+            .delim = ","
+        ),
+        .name_repair = snakecase::to_snake_case
+    )
+    return(info_data)
+}
+
+```
 
