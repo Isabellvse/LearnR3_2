@@ -8,6 +8,8 @@ output: html_document
 library(vroom)
 library(here)
 library(vroom)
+library(purrr)
+library(fs)
 source(here("R/functions.R")) 
 ```
 
@@ -130,5 +132,15 @@ import_user_info(here("data-raw/mmash/user_1/user_info.csv"))
 
 # Test that the function works
 import_saliva(here("data-raw/mmash/user_1/saliva.csv"))
+```
+
+```{r}
+user_info_files <- fs::dir_ls(here::here("data-raw/mmash/"), 
+                          regexp = "user_info.csv", 
+                          recurse = TRUE)
+
+user_info_df <- map_dfr(user_info_files, import_user_info,
+                        .id = "file_path_id")
+
 ```
 
