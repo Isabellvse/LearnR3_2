@@ -38,3 +38,24 @@ summarised_actigraph_df <- actigraph_df %>%
     dplyr::summarise(dplyr::across(hr, list(mean = mean, sd = sd), na.rm = TRUE))
 ```
 
+```{r}
+full_join(user_info_df, saliva_df, by = "user_id")
+```
+
+```{r}
+combined_data <- reduce(list(user_info_df, saliva_df), full_join)
+```
+
+```{r}
+reduce(list(user_info_df, saliva_df, summarised_rr_df), full_join)
+```
+```{r}
+saliva_with_day_df <- saliva_df %>% 
+    mutate(day = case_when(
+        samples == "before sleep" ~ 1,
+        samples == "wake up" ~ 2
+    ))
+
+reduce(list(user_info_df, saliva_with_day_df, summarised_rr_df), full_join)
+```
+
