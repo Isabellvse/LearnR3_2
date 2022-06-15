@@ -11,6 +11,7 @@ library(vroom)
 library(purrr)
 library(fs)
 source(here("R/functions.R")) 
+options(dplyr.summarise.inform = FALSE)
 ```
 
 ## Importing raw data
@@ -169,4 +170,31 @@ import_multiple_files <- function(file_pattern, import_function) {
 import_multiple_files("saliva.csv", import_saliva)
 ```
 
-# Du er nået til 8.7
+```{r}
+rr_df <- import_multiple_files("RR.csv", import_rr)
+
+rr_df %>% 
+    group_by(file_path_id, day) %>% 
+    summarise(across(ibi_s, list(mean = mean), na.rm = TRUE))
+```
+# Summase mean and standard deviation
+
+```{r}
+summaried_rr_df <- rr_df %>% 
+    group_by(file_path_id, day) %>% 
+    summarise(across(ibi_s, list(mean = mean, sd = sd), na.rm = TRUE)) %>% 
+    ungroup()
+
+summaried_rr_df
+```
+## Exercise: Summarise Actigraph
+
+```{r}
+actigraph_df <-import_multiple_files("Actigraph.csv", import_actigraph)
+summarised_actigraph_df <- actigraph_df %>% 
+    group_by(file_path_id, day) %>% 
+    summarise(across(steps, list(mean = mean, sd = sd), na.rm = TRUE)) %>% 
+    ungroup()
+
+```
+
