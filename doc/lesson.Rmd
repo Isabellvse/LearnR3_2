@@ -134,6 +134,9 @@ import_user_info(here("data-raw/mmash/user_1/user_info.csv"))
 import_saliva(here("data-raw/mmash/user_1/saliva.csv"))
 ```
 
+
+## Exercise: Map on the other datasets
+
 ```{r}
 user_info_files <- fs::dir_ls(here::here("data-raw/mmash/"), 
                           regexp = "user_info.csv", 
@@ -144,3 +147,26 @@ user_info_df <- map_dfr(user_info_files, import_user_info,
 
 ```
 
+```{r}
+#' Import multiple MMASH data files and merge into one data frame.
+#'
+#' @param file_pattern Pattern for which data file to import.
+#' @param import_function Function to import the data file.
+#'
+#' @return A single data frame/tibble.
+#'
+import_multiple_files <- function(file_pattern, import_function) {
+    data_files <- fs::dir_ls(here::here("data-raw/mmash/"),
+                             regexp = file_pattern,
+                             recurse = TRUE)
+    
+    combined_data <- purrr::map_dfr(data_files, import_function,
+                                    .id = "file_path_id")
+    return(combined_data)
+}
+
+# Test on saliva in the Console
+import_multiple_files("saliva.csv", import_saliva)
+```
+
+# Du er nået til 8.7
