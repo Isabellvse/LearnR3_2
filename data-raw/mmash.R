@@ -44,15 +44,52 @@ saliva_with_day_df <- saliva_df %>%
         TRUE ~ NA_real_
     ))
 
-mmash <- reduce(
+mmash1 <- reduce(
     list(
         user_info_df,
-        saliva_with_day_df,
-        summarised_rr_df,
-        summarised_actigraph_df
-    ),
+        saliva_with_day_df),
     full_join
 )
 
+mmash2 <- reduce(
+    list(
+        mmash1,
+        summarised_rr_df),
+    full_join
+)
+
+mmash3<- reduce(
+    list(
+        mmash2,
+        summarised_actigraph_df),
+    full_join
+)
+
+mash4 <- reduce(
+    list(user_info_df,
+         summarised_rr_df,
+         saliva_with_day_df,
+         summarised_actigraph_df
+         ),
+    full_join
+)
+
+df_list <- list(user_info_df,
+          summarised_rr_df,
+          saliva_with_day_df,
+          summarised_actigraph_df)
+
+df_merge <- cbind(df_list)
+
+df_merge <- cbindPad(user_info_df,
+         summarised_rr_df,
+         saliva_with_day_df,
+         summarised_actigraph_df)
+
+
 
 usethis::use_data(mmash, overwrite = TRUE)
+usethis::use_data(saliva_with_day_df, overwrite = TRUE)
+usethis::use_data(summarised_rr_df, overwrite = TRUE)
+usethis::use_data(summarised_actigraph_df, overwrite = TRUE)
+usethis::use_data(user_info_df, overwrite = TRUE)
